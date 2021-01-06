@@ -12,20 +12,22 @@ namespace PlagarismChecker.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            if (configuration.GetValue<bool>("UseInMemoryDatabase"))
-            {
-                services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseInMemoryDatabase("PlagarismCheckerDb"));
-            }
-            else
-            {
-                services.AddDbContext<ApplicationDbContext>(options =>
+            //if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+            //{
+            //    services.AddDbContext<ApplicationDbContext>(options =>
+            //        options.UseInMemoryDatabase("PlagarismCheckerDb"));
+            //}
+            //else
+            //{
+            //    services.AddDbContext<ApplicationDbContext>(options =>
+            //        options.UseSqlServer(
+            //            configuration.GetConnectionString("DefaultConnection"),
+            //            b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+            //}
+            services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(
-                        configuration.GetConnectionString("DefaultConnection"),
-                        b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
-            }
-
-            services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
+                        configuration.GetConnectionString("PlagiarismCheckerDbConnection")));
+            //services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
 
             services.AddTransient<IDateTime, DateTimeService>();
