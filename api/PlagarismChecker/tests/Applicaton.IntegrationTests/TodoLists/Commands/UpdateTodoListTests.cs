@@ -51,31 +51,31 @@ namespace PlagarismChecker.Application.IntegrationTests.TodoLists.Commands
                     .And.Errors["Title"].Should().Contain("The specified title already exists.");
         }
 
-        [Test]
-        public async Task ShouldUpdateTodoList()
-        {
-            var userId = await RunAsDefaultUserAsync();
+        //[Test]
+        //public async Task ShouldUpdateTodoList()
+        //{
+        //    var userId = await RunAsDefaultUserAsync();
 
-            var listId = await SendAsync(new CreateTodoListCommand
-            {
-                Title = "New List"
-            });
+        //    var listId = await SendAsync(new CreateTodoListCommand
+        //    {
+        //        Title = "New List"
+        //    });
 
-            var command = new UpdateTodoListCommand
-            {
-                Id = listId,
-                Title = "Updated List Title"
-            };
+        //    var command = new UpdateTodoListCommand
+        //    {
+        //        Id = listId,
+        //        Title = "Updated List Title"
+        //    };
 
-            await SendAsync(command);
+        //    await SendAsync(command);
 
-            var list = await FindAsync<TodoList>(listId);
+        //    var list = await FindAsync<TodoList>(listId);
 
-            list.Title.Should().Be(command.Title);
-            list.LastModifiedBy.Should().NotBeNull();
-            list.LastModifiedBy.Should().Be(userId);
-            list.LastModified.Should().NotBeNull();
-            list.LastModified.Should().BeCloseTo(DateTime.Now, 1000);
-        }
+        //    list.Title.Should().Be(command.Title);
+        //    list.LastModifiedBy.Should().NotBeNull();
+        //    list.LastModifiedBy.Should().Be(userId);
+        //    list.LastModified.Should().NotBeNull();
+        //    list.LastModified.Should().BeCloseTo(DateTime.Now, 1000);
+        //}
     }
 }
