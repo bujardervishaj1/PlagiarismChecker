@@ -29,6 +29,7 @@ namespace PlagarismChecker.Infrastructure
 
 
             services.AddTransient<IDateTime, DateTimeService>();
+            services.AddTransient<ISearchEngineService, SearchEngineService>();
             services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
 
 

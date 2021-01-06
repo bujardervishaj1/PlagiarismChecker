@@ -1,8 +1,10 @@
 ﻿using MediatR;
+using Newtonsoft.Json;
 using PlagarismChecker.Application.Common.Helpers;
-using System.Collections.Specialized;
+using PlagarismChecker.Application.Common.Interfaces;
+using PlagarismChecker.Application.Common.Models;
+using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,77 +17,80 @@ namespace PlagarismChecker.Application.Plagiarism.Commands.CheckTextForPlagiaris
 
     public class CheckTextForPlagiarismCommandHandler : IRequestHandler<CheckTextForPlagiarismCommand, CheckTextForPlagiarismDto>
     {
-        private int _plagiarized = 0;
-        private int _numCorpuses = 0;
+        private readonly ISearchEngineService _searchEngineService;
+
+        public CheckTextForPlagiarismCommandHandler(
+            ISearchEngineService searchEngineService
+            )
+        {
+            this._searchEngineService = searchEngineService;
+        }
 
         public async Task<CheckTextForPlagiarismDto> Handle(CheckTextForPlagiarismCommand request, CancellationToken cancellationToken)
         {
             var sentences = request.TextToSearch.GetSentences();
-            var plagiarism = CheckPlagiarism(sentences);
+            var plagiarism = await CheckPlagiarism(sentences);
 
-            float percentPlagiarized = (_plagiarized / (float)_numCorpuses) * 100;
+            float percentPlagiarized = (_plagiarized / (float)_numSentences) * 100;
 
-            var checkTextForPlagiarismDto = new CheckTextForPlagiarismDto { NoOfPlagiarism = _plagiarized.ToString(), PercentPlagiarized = percentPlagiarized.ToString(), PlagarisedUrls = plagiarism };
+            var checkTextForPlagiarismDto = new CheckTextForPlagiarismDto { PercentPlagiarized = percentPlagiarized.ToString(), PlagarisedUrls = plagiarism };
 
             return checkTextForPlagiarismDto;
         }
 
-        private string[] CheckPlagiarism(string[] sentences, bool isGoogle = false)
+
+        private int _plagiarized = 0;
+        private int _numSentences = 0;
+        private async Task<string[]> CheckPlagiarism(string[] sentences)
         {
-
-            string[] res = new string[sentences.Length];
+            var res = new List<string>();
             this._plagiarized = 0;
-            this._numCorpuses = sentences.Length;
+            this._numSentences = sentences.Length;
 
-            int i = 0;
             foreach (string sentence in sentences)
             {
                 string r = "";
-                r = this.CheckGoogle(sentence.Trim());
+                r = await this.CheckGoogleProgramableEngine(sentence.Trim());
 
-                if (r != "") this._plagiarized += 1;
-
-                res[i] = r;
-
-                i++;
+                if (r != "")
+                {
+                    this._plagiarized += 1;
+                    res.Add(r);
+                }
             }
 
-            return res;
+            return res.Distinct().ToArray();
         }
 
-        private string CheckGoogle(string sentence)
+        private async Task<string> CheckGoogleProgramableEngine(string sentence)
         {
+            string responseString = await _searchEngineService.SearchTheSentence(sentence);
 
-            NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
-            queryString["q"] = sentence;
+            dynamic jsonData = JsonConvert.DeserializeObject(responseString);
+            var results = new List<Result>();
 
-            WebClient client = new WebClient();
-            string content = client.DownloadString("https://www.google.com/search?hl=en&as_q=&as_epq=%22" + queryString.ToString().Replace("q=", "") + "%22");
-
-            var t = content.CountOccurenceswWithinString(sentence);
-
-            if (t <= 2)
-                return "";
-
-            return "https://www.google.com.sg/search?q=%22" + queryString.ToString().Replace("q=", "") + "%22";
-        }
-
-        private string CheckBing(string sentence)
-        {
-
-            NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
-            queryString["q"] = sentence;
-
-            string content = "";
-            if (queryString.ToString() != "q=+%0a%0a")
+            try
             {
-                WebClient client = new WebClient();
-                content = client.DownloadString("http://www.bing.com/search?q=\"" + queryString.ToString().Replace("q=", "") + "\"");
+                foreach (var item in jsonData.items)
+                {
+                    results.Add(new Result
+                    {
+                        Title = item.title,
+                        Link = item.link,
+                        Snippet = item.snippet,
+                    });
+                }
+                foreach (var result in results)
+                {
+                    if (result.Snippet.Replace("...", "").Replace("\n", "").Contains(sentence))
+                    {
+                        return result.Link;
+                    }
+                }
             }
+            catch { return ""; }
 
-            if (content.ToLower().Contains("no results found for")) return "";
-
-            return "http://www.bing.com/search?q=\"" + queryString.ToString().Replace("q=", "") + "\"";
+            return "";
         }
     }
 }
