@@ -1,28 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace PlagarismChecker.Application.Common.Models
+﻿namespace PlagarismChecker.Application.Common.Models
 {
     public class Result
     {
-        internal Result(bool succeeded, IEnumerable<string> errors)
-        {
-            Succeeded = succeeded;
-            Errors = errors.ToArray();
-        }
+        public string Title { get; set; }
 
-        public bool Succeeded { get; set; }
+        public string Link { get; set; }
 
-        public string[] Errors { get; set; }
+        public string Snippet { get; set; }
 
-        public static Result Success()
-        {
-            return new Result(true, new string[] { });
-        }
+        public string Source { get; set; }
 
-        public static Result Failure(IEnumerable<string> errors)
-        {
-            return new Result(false, errors);
-        }
+        public string Query { get; set; }
+
+        public string Index { get; set; }
     }
 }

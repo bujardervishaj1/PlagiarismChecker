@@ -24,11 +24,16 @@ namespace PlagarismChecker.Infrastructure
                         configuration.GetConnectionString("DefaultConnection"),
                         b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
             }
+            services.AddDbContext<PlagiarismCheckerDbContext>(options =>
+                    options.UseSqlServer(
+                        configuration.GetConnectionString("PlagiarismCheckerDbConnection")));
+            services.AddScoped<IPlagiarismCheckerDbContext>(provider => provider.GetService<PlagiarismCheckerDbContext>());
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
 
 
             services.AddTransient<IDateTime, DateTimeService>();
+            services.AddTransient<ISearchEngineService, SearchEngineService>();
             services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
 
 

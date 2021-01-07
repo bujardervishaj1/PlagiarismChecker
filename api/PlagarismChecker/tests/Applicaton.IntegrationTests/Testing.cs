@@ -1,18 +1,14 @@
-﻿using PlagarismChecker.Application.Common.Interfaces;
-using PlagarismChecker.Infrastructure.Identity;
-using PlagarismChecker.Infrastructure.Persistence;
-using PlagarismChecker.WebUI;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
+using PlagarismChecker.Infrastructure.Persistence;
+using PlagarismChecker.WebUI;
 using Respawn;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 [SetUpFixture]
