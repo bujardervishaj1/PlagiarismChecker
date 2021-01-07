@@ -26,7 +26,7 @@ namespace PlagarismChecker.Application.Users.Commands.AddUser
 
             RuleFor(x => x.Username)
                 .NotEmpty().WithMessage("Username must not be empty!")
-                .MustAsync(BeUniqueUsername).WithMessage("The specified username already exists.");
+                .MustAsync(BeUniqueUsername).WithMessage("The specified username already exists!");
 
 
             RuleFor(x => x.Password)
@@ -36,7 +36,7 @@ namespace PlagarismChecker.Application.Users.Commands.AddUser
         public async Task<bool> BeUniqueUsername(string username, CancellationToken cancellationToken)
         {
             return await _plagiarismCheckerDbContext.Users
-                .AllAsync(l => l.Username != username);
+                .AllAsync(x => x.Username.ToLower() != username.ToLower());
         }
     }
 }

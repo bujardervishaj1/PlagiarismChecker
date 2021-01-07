@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace PlagarismChecker.WebUI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public abstract class ApiController : ControllerBase
     {
         private IMediator _mediator;
