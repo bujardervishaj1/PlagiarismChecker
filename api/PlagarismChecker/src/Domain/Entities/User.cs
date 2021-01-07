@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PlagarismChecker.Domain.Entities
 {
-    [Table("Users")]
+    [Table("User")]
     public class User
     {
         [Key]
@@ -16,8 +16,8 @@ namespace PlagarismChecker.Domain.Entities
 
         public string Username { get; set; }
 
-        public string Password { get; set; }
+        public byte[] Password { get; set; }
 
-        public string Salt { get; set; }
+        public byte[] Salt { get; set; }
     }
 }
