@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using PlagarismChecker.Application.Common.Helpers;
 using PlagarismChecker.Application.Common.Interfaces;
 using PlagarismChecker.Application.Common.Models;
+using PlagarismChecker.Application.Users.Queries.GetUser;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -18,16 +19,22 @@ namespace PlagarismChecker.Application.Plagiarism.Commands.CheckTextForPlagiaris
     public class CheckTextForPlagiarismCommandHandler : IRequestHandler<CheckTextForPlagiarismCommand, CheckTextForPlagiarismDto>
     {
         private readonly ISearchEngineService _searchEngineService;
+        private readonly IRequestHandler<GetUserQuery, GetUserDto> _getUser;
 
         public CheckTextForPlagiarismCommandHandler(
-            ISearchEngineService searchEngineService
+            ISearchEngineService searchEngineService,
+            IRequestHandler<GetUserQuery, GetUserDto> getUser
             )
         {
             this._searchEngineService = searchEngineService;
+            this._getUser = getUser;
         }
 
         public async Task<CheckTextForPlagiarismDto> Handle(CheckTextForPlagiarismCommand request, CancellationToken cancellationToken)
         {
+            var t = _getUser.Handle(new GetUserQuery { Username = "bujardervishaj" }, cancellationToken);
+
+
             var sentences = request.TextToSearch.GetSentences();
             var plagiarism = await CheckPlagiarism(sentences);
 

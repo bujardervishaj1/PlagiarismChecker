@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PlagarismChecker.Application.Common.Interfaces
 {
-    public interface IPlagiarismChecerDbContext
+    public interface IPlagiarismCheckerDbContext
     {
         DbSet<User> Users { get; set; }
 

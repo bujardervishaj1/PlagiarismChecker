@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace PlagarismChecker.Infrastructure.Persistence
 {
-    public class PlagiarismChecerDbContext : DbContext, IPlagiarismChecerDbContext
+    public class PlagiarismCheckerDbContext : DbContext, IPlagiarismCheckerDbContext
     {
         private IDbContextTransaction _currentTransaction;
 
-        public PlagiarismChecerDbContext(
-            DbContextOptions<PlagiarismChecerDbContext> options) : base (options)
+        public PlagiarismCheckerDbContext(
+            DbContextOptions<PlagiarismCheckerDbContext> options) : base (options)
         {
         }
 
