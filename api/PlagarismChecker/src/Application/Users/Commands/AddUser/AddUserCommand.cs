@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using PlagarismChecker.Application.Common.Helpers;
 using PlagarismChecker.Application.Common.Interfaces;
 using PlagarismChecker.Domain.Entities;
@@ -32,12 +31,7 @@ namespace PlagarismChecker.Application.Users.Commands.AddUser
 
         public async Task<Guid> Handle(AddUserCommand request, CancellationToken cancellationToken)
         {
-            var userExist = await _plagiarismChecerDbContext.Users.FirstOrDefaultAsync(x => x.Username == request.Username);
-            if (userExist != null)
-                return Guid.Empty;
-
             var salt = ExtensionMethods.GenerateSalt();
-
             var user = new User
             {
                 Name = request.Name,
@@ -50,7 +44,7 @@ namespace PlagarismChecker.Application.Users.Commands.AddUser
             await _plagiarismChecerDbContext.Users.AddAsync(user);
             var saved = await _plagiarismChecerDbContext.SaveChangesAsync(cancellationToken);
 
-            return user.Id;
+            return saved >= 1 ? user.Id : Guid.Empty;
         }
     }
 }
