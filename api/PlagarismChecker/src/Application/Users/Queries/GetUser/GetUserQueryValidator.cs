@@ -1,10 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FluentValidation;
 
 namespace PlagarismChecker.Application.Users.Queries.GetUser
 {
-    class GetUserQueryValidator
+    public class GetUserQueryValidator : AbstractValidator<GetUserQuery>
     {
+        public GetUserQueryValidator()
+        {
+            RuleFor(x => x.Id)
+                .NotEmpty().WithMessage("Id must not be empty!");
+        }
     }
 }

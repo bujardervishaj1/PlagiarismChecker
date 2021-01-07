@@ -32,9 +32,6 @@ namespace PlagarismChecker.Application.Plagiarism.Commands.CheckTextForPlagiaris
 
         public async Task<CheckTextForPlagiarismDto> Handle(CheckTextForPlagiarismCommand request, CancellationToken cancellationToken)
         {
-            var t = _getUser.Handle(new GetUserQuery { Username = "bujardervishaj" }, cancellationToken);
-
-
             var sentences = request.TextToSearch.GetSentences();
             var plagiarism = await CheckPlagiarism(sentences);
 
