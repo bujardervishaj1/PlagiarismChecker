@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PlagarismChecker.Application.Users.Commands.AddUser;
+using PlagarismChecker.Application.Users.Commands.LoginUser;
 using PlagarismChecker.Application.Users.Queries.GetUser;
 using PlagarismChecker.Application.Users.Queries.GetUserByUsername;
 using System;
@@ -11,6 +12,12 @@ namespace PlagarismChecker.WebUI.Controllers
     {
         [HttpPost]
         public async Task<ActionResult<Guid>> AddUser(AddUserCommand command)
+        {
+            return await Mediator.Send(command);
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<bool>> LoginUser(LoginUserCommand command)
         {
             return await Mediator.Send(command);
         }
