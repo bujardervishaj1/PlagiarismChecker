@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using PlagarismChecker.Application.Common.Helpers;
 using PlagarismChecker.Application.Common.Interfaces;
 using PlagarismChecker.Application.Common.Models;
-using PlagarismChecker.Application.Users.Queries.GetUser;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -13,26 +12,23 @@ namespace PlagarismChecker.Application.Plagiarism.Commands.CheckTextForPlagiaris
 {
     public class CheckTextForPlagiarismCommand : IRequest<CheckTextForPlagiarismDto>
     {
-        public string TextToSearch { get; set; }
+        public string TextToCheck { get; set; }
     }
 
     public class CheckTextForPlagiarismCommandHandler : IRequestHandler<CheckTextForPlagiarismCommand, CheckTextForPlagiarismDto>
     {
         private readonly ISearchEngineService _searchEngineService;
-        private readonly IRequestHandler<GetUserQuery, GetUserDto> _getUser;
 
         public CheckTextForPlagiarismCommandHandler(
-            ISearchEngineService searchEngineService,
-            IRequestHandler<GetUserQuery, GetUserDto> getUser
+            ISearchEngineService searchEngineService
             )
         {
             this._searchEngineService = searchEngineService;
-            this._getUser = getUser;
         }
 
         public async Task<CheckTextForPlagiarismDto> Handle(CheckTextForPlagiarismCommand request, CancellationToken cancellationToken)
         {
-            var sentences = request.TextToSearch.GetSentences();
+            var sentences = request.TextToCheck.GetSentences();
             var plagiarism = await CheckPlagiarism(sentences);
 
             float percentPlagiarized = (_plagiarized / (float)_numSentences) * 100;
