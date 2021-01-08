@@ -1,0 +1,40 @@
+CREATE DATABASE [PlagiarismChecker]
+
+CREATE TABLE [dbo].[User](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Name] [nvarchar](50) NOT NULL,
+	[Surname] [nvarchar](50) NOT NULL,
+	[Username] [nchar](20) NOT NULL,
+	[Password] [binary](16) NOT NULL,
+	[Salt] [binary](16) NOT NULL,
+ CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[User] ADD  CONSTRAINT [DF_User_Id]  DEFAULT (newid()) FOR [Id]
+GO
+
+CREATE TABLE [dbo].[UserHistory](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Username] [nchar](20) NOT NULL,
+	[Text] [nvarchar](max) NOT NULL,
+	[Result] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_UserHistory] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[UserHistory] ADD  CONSTRAINT [DF_UserHistory_Id]  DEFAULT (newid()) FOR [Id]
+GO
+
+ALTER TABLE [dbo].[UserHistory]  WITH CHECK ADD  CONSTRAINT [FK_UserHistory_UserHistory] FOREIGN KEY([Id])
+REFERENCES [dbo].[UserHistory] ([Id])
+GO
+
+ALTER TABLE [dbo].[UserHistory] CHECK CONSTRAINT [FK_UserHistory_UserHistory]
+GO
