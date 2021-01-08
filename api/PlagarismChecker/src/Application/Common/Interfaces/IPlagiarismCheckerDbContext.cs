@@ -9,6 +9,8 @@ namespace PlagarismChecker.Application.Common.Interfaces
     {
         DbSet<User> Users { get; set; }
 
+        DbSet<UserHistory> UserHistory { get; set; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

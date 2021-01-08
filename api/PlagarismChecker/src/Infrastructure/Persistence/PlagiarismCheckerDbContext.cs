@@ -14,11 +14,13 @@ namespace PlagarismChecker.Infrastructure.Persistence
         private IDbContextTransaction _currentTransaction;
 
         public PlagiarismCheckerDbContext(
-            DbContextOptions<PlagiarismCheckerDbContext> options) : base (options)
+            DbContextOptions<PlagiarismCheckerDbContext> options) : base(options)
         {
         }
 
         public DbSet<User> Users { get; set; }
+
+        public DbSet<UserHistory> UserHistory { get; set; }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
