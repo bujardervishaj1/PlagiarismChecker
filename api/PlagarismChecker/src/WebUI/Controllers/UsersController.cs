@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using PlagarismChecker.Application.Users.Commands.AddUser;
 using PlagarismChecker.Application.Users.Commands.LoginUser;
 using PlagarismChecker.Application.Users.Queries.GetUser;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace PlagarismChecker.WebUI.Controllers
 {
+    [EnableCors("MyPolicy")]
     public class UsersController : ApiController
     {
         [HttpPost]

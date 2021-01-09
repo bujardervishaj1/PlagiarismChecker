@@ -21,6 +21,12 @@ namespace PlagarismChecker.WebUI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
             services.AddApplication();
             services.AddInfrastructure(Configuration);
 
@@ -36,6 +42,9 @@ namespace PlagarismChecker.WebUI
             });
 
             services.AddSwaggerGen();
+
+           // services.useMvc();
+            
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -59,9 +68,9 @@ namespace PlagarismChecker.WebUI
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            
             app.UseRouting();
-
+            app.UseCors("MyPolicy");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -69,6 +78,8 @@ namespace PlagarismChecker.WebUI
                     pattern: "{controller}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+        
         }
     }
 }
