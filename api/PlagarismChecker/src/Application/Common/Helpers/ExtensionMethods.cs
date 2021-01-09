@@ -32,7 +32,7 @@ namespace PlagarismChecker.Application.Common.Helpers
 
         public static string[] GetSentences(this string text)
         {
-            char[] sep = { '.', ';', '!', '?', ':' };
+            char[] sep = { '.', ';', '!', '?', ':', '\n', '\t' };
             string[] sentences = text.Split(sep);
 
             return sentences.Where(s => !s.Equals("")).ToArray();

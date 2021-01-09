@@ -4,6 +4,6 @@ namespace PlagarismChecker.Application.Common.Interfaces
 {
     public interface ISearchEngineService
     {
-        public Task<string> SearchTheSentence(string sentence);
+        public Task<string> SearchTheSentenceApi(string sentence, int apiNo);
     }
 }

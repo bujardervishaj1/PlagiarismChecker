@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Newtonsoft.Json;
-using PlagarismChecker.Application.Common.Interfaces;
 using PlagarismChecker.Application.Common.Mappings;
 using PlagarismChecker.Application.Common.Models;
 using PlagarismChecker.Domain.Entities;
