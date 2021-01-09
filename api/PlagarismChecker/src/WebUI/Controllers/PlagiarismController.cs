@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PlagarismChecker.WebUI.Controllers
 {
-    EnableCors("MyPolicy")]
+   // EnableCors("MyPolicy")]
     public class PlagiarismController : ApiController
     {
         [HttpPost]

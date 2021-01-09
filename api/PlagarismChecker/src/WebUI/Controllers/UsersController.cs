@@ -20,7 +20,7 @@ namespace PlagarismChecker.WebUI.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<bool>> LoginUser(LoginUserCommand command)
+        public async Task<ActionResult<Guid>> LoginUser(LoginUserCommand command)
         {
             return await Mediator.Send(command);
         }
