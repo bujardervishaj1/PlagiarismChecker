@@ -20,8 +20,9 @@ GO
 CREATE TABLE [dbo].[UserHistory](
 	[Id] [uniqueidentifier] NOT NULL,
 	[Username] [nchar](20) NOT NULL,
-	[Text] [nvarchar](max) NOT NULL,
+	[Request] [nvarchar](max) NOT NULL,
 	[Result] [nvarchar](max) NOT NULL,
+	[RequestDate] [date] NOT NULL,
  CONSTRAINT [PK_UserHistory] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
