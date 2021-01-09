@@ -12,7 +12,14 @@ namespace PlagarismChecker.Application.Plagiarism.Commands.CheckTextForPlagiaris
 {
     public class CheckTextForPlagiarismCommand : IRequest<CheckTextForPlagiarismDto>
     {
+        public CheckTextForPlagiarismCommand()
+        {
+            ExcludedUrls = new List<string>();
+        }
+
         public string TextToCheck { get; set; }
+
+        public List<string> ExcludedUrls { get; set; }
     }
 
     public class CheckTextForPlagiarismCommandHandler : IRequestHandler<CheckTextForPlagiarismCommand, CheckTextForPlagiarismDto>
@@ -29,7 +36,7 @@ namespace PlagarismChecker.Application.Plagiarism.Commands.CheckTextForPlagiaris
         public async Task<CheckTextForPlagiarismDto> Handle(CheckTextForPlagiarismCommand request, CancellationToken cancellationToken)
         {
             var sentences = request.TextToCheck.GetSentences();
-            var plagiarism = await CheckPlagiarism(sentences);
+            var plagiarism = await CheckPlagiarism(sentences, request.ExcludedUrls);
 
             float percentPlagiarized = (_plagiarized / (float)_numSentences) * 100;
 
@@ -41,7 +48,7 @@ namespace PlagarismChecker.Application.Plagiarism.Commands.CheckTextForPlagiaris
 
         private int _plagiarized = 0;
         private int _numSentences = 0;
-        private async Task<string[]> CheckPlagiarism(string[] sentences)
+        private async Task<string[]> CheckPlagiarism(string[] sentences, List<string> excludedUrls)
         {
             var res = new List<string>();
             this._plagiarized = 0;
@@ -50,7 +57,7 @@ namespace PlagarismChecker.Application.Plagiarism.Commands.CheckTextForPlagiaris
             foreach (string sentence in sentences)
             {
                 string r = "";
-                r = await this.CheckGoogleProgramableEngine(sentence.Trim());
+                r = await this.CheckGoogleProgramableEngine(sentence.Trim(), excludedUrls);
 
                 if (r != "")
                 {
@@ -62,18 +69,18 @@ namespace PlagarismChecker.Application.Plagiarism.Commands.CheckTextForPlagiaris
             return res.Distinct().ToArray();
         }
 
-        private async Task<string> CheckGoogleProgramableEngine(string sentence)
+        private async Task<string> CheckGoogleProgramableEngine(string sentence, List<string> excludedUrls)
         {
             string responseString = await _searchEngineService.SearchTheSentence(sentence);
 
             dynamic jsonData = JsonConvert.DeserializeObject(responseString);
-            var results = new List<Result>();
+            var results = new List<SearchEnginResult>();
 
             try
             {
                 foreach (var item in jsonData.items)
                 {
-                    results.Add(new Result
+                    results.Add(new SearchEnginResult
                     {
                         Title = item.title,
                         Link = item.link,
@@ -84,6 +91,13 @@ namespace PlagarismChecker.Application.Plagiarism.Commands.CheckTextForPlagiaris
                 {
                     if (result.Snippet.Replace("...", "").Replace("\n", "").Contains(sentence))
                     {
+                        for (int i = 0; i < excludedUrls.Count; i++)
+                        {
+                            if (excludedUrls[i] == result.Link)
+                            {
+                                return "";
+                            }
+                        }
                         return result.Link;
                     }
                 }
