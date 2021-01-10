@@ -2,10 +2,11 @@
 using PlagarismChecker.Application.Plagiarism.Commands.CheckTextForPlagiarism;
 using PlagarismChecker.Application.Plagiarism.Commands.CheckTextForPlagiarismForUser;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors;
 
 namespace PlagarismChecker.WebUI.Controllers
 {
-   // EnableCors("MyPolicy")]
+   [EnableCors("MyPolicy")]
     public class PlagiarismController : ApiController
     {
         [HttpPost]
