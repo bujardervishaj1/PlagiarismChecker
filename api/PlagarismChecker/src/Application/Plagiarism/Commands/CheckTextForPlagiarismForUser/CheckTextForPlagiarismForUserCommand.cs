@@ -47,6 +47,7 @@ namespace PlagarismChecker.Application.Plagiarism.Commands.CheckTextForPlagiaris
             checkTextForPlagiarismForUserDto.Username = request.Username;
 
             SaveToDb(request, checkTextForPlagiarismForUserDto, cancellationToken);
+            await _plagiarismCheckerDbContext.SaveChangesAsync(cancellationToken);
 
             return checkTextForPlagiarismForUserDto;
         }
@@ -65,7 +66,8 @@ namespace PlagarismChecker.Application.Plagiarism.Commands.CheckTextForPlagiaris
             };
 
             await _plagiarismCheckerDbContext.UserHistory.AddAsync(userHistory);
-            await _plagiarismCheckerDbContext.SaveChangesAsync(cancellationToken);
+           
         }
+
     }
 }
