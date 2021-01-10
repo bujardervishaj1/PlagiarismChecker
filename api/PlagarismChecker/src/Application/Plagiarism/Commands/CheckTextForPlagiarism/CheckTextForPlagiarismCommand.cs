@@ -69,13 +69,13 @@ namespace PlagarismChecker.Application.Plagiarism.Commands.CheckTextForPlagiaris
             return res.Distinct().ToArray();
         }
 
-        private int apiToCall = 0;
+        private int apiToCall = 1;
         private async Task<string> CheckGoogleProgramableEngine(string sentence, List<string> excludedUrls)
         {
             apiToCall += 1;
             string responseString = await _searchEngineService.SearchTheSentenceApi(sentence, apiToCall);
-            if (apiToCall == 5)
-                apiToCall = 0;
+            if (apiToCall == 9)
+                apiToCall = 1;
 
             dynamic jsonData = JsonConvert.DeserializeObject(responseString);
             var results = new List<SearchEnginResult>();
